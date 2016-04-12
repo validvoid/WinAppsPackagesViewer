@@ -1,0 +1,132 @@
+﻿<Window x:Class="ProjMarduk.AppPackagesViewer.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:ProjMarduk.AppPackagesViewer"
+        mc:Ignorable="d"
+        Title="Windows App Packages Viewer" Height="400" Width="640">
+    <Window.Resources>
+        <local:LogoConverter x:Key="LogoConverter"/>
+        <local:VersionConverter x:Key="VersionConverter"/>
+    </Window.Resources>
+    <Grid x:Name="layoutRoot">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+        <ProgressBar x:Name="progressBar"/>
+        <Grid Margin="4" Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+            <Button x:Name="button" Content="Load All Packages" HorizontalAlignment="Left" VerticalAlignment="Top" Padding="8,2" Click="button_Click"/>
+            <TextBlock x:Name="textBlock" HorizontalAlignment="Left" TextWrapping="Wrap" Text="Search:" VerticalAlignment="Center" Grid.Column="1" Margin="12,0,4,0"/>
+            <TextBox x:Name="txtFilter" TextWrapping="Wrap" Grid.Column="2" TextChanged="txtFilter_TextChanged"/>
+            <ComboBox x:Name="comboBox" VerticalAlignment="Top" Grid.Column="3" Margin="4,0,0,0" Width="120" SelectedIndex="0" SelectionChanged="comboBox_SelectionChanged">
+                <ComboBoxItem Content="Package Name"/>
+                <ComboBoxItem Content="Publisher"/>
+            </ComboBox>
+        </Grid>
+        <ListView x:Name="listView" Grid.Row="2" Margin="0,4,0,0" HorizontalContentAlignment="Stretch">
+            <ListView.ContextMenu>
+                <ContextMenu>
+                    <MenuItem Header="Open install folder" Click="menuItemOpenInstallDir_OnClick"/>
+                    <MenuItem Header="Open local storage folder" Click="menuItemOpenLocalDir_OnClick"/>
+                    <Separator/>
+                    <MenuItem Header="View status..." Click="menuItemStatus_OnClick"/>
+                </ContextMenu>
+            </ListView.ContextMenu>
+            <ListView.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <VirtualizingStackPanel>
+                    </VirtualizingStackPanel>
+                </ItemsPanelTemplate>
+            </ListView.ItemsPanel>
+            <ListView.ItemTemplate>
+                <DataTemplate>
+                    <Grid Background="#00FFFFFF">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="72"/>
+                            <ColumnDefinition/>
+                        </Grid.ColumnDefinitions>
+
+                        <Rectangle Margin="4" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Fill="#FF333333" StrokeThickness="0"/>
+                        <Image Source="{Binding Converter={StaticResource LogoConverter}, Mode=OneWay}" Margin="4" MaxHeight="72" MaxWidth="72" Stretch="Uniform"/>
+                        <Rectangle VerticalAlignment="Bottom" Grid.Column="1" StrokeThickness="0" Height="1" Margin="0" Fill="#FFDEDEDE"/>
+                        <Grid Grid.Column="1" Margin="4,0,0,4">
+                            <Grid.RowDefinitions>
+                                <RowDefinition/>
+                                <RowDefinition/>
+                                <RowDefinition/>
+                                <RowDefinition/>
+                            </Grid.RowDefinitions>
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Text="FullName: " Foreground="#FF9B9B9B"/>
+                                <TextBlock Text="{Binding Id.FullName}" Foreground="#FF0080FF"/>
+                            </StackPanel>
+                            <StackPanel Orientation="Horizontal" Grid.Row="1">
+                                <TextBlock Text="Version: " Foreground="#FF9B9B9B" FontSize="10.667"/>
+                                <TextBlock Text="{Binding Converter={StaticResource VersionConverter}, Mode=OneWay}" FontSize="10.667"/>
+                            </StackPanel>
+                            <StackPanel Orientation="Horizontal" Grid.Row="2">
+                                <TextBlock Text="InstalledLocation: " Foreground="#FF9B9B9B" FontSize="10.667"/>
+                                <TextBlock Text="{Binding InstalledLocation.Path}" FontSize="10.667"/>
+                            </StackPanel>
+                            <Grid Grid.Row="3">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition/>
+                                    <ColumnDefinition/>
+                                </Grid.ColumnDefinitions>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition/>
+                                    <RowDefinition/>
+                                    <RowDefinition/>
+                                    <RowDefinition/>
+                                    <RowDefinition/>
+                                </Grid.RowDefinitions>
+                                <StackPanel Orientation="Horizontal" Grid.Row="0" Grid.Column="0">
+                                    <TextBlock Text="IsFramework: " Foreground="#FF9B9B9B" FontSize="10.667"/>
+                                    <TextBlock Text="{Binding IsFramework}" FontSize="10.667"/>
+                                </StackPanel>
+                                <StackPanel Orientation="Horizontal" Grid.Row="0" Grid.Column="1">
+                                    <TextBlock Text="IsBundle: " Foreground="#FF9B9B9B" FontSize="10.667"/>
+                                    <TextBlock Text="{Binding IsBundle}" FontSize="10.667"/>
+                                </StackPanel>
+                                <StackPanel Orientation="Horizontal" Grid.Row="1" Grid.Column="0">
+                                    <TextBlock Text="IsDevelopmentMode: " Foreground="#FF9B9B9B" FontSize="10.667"/>
+                                    <TextBlock Text="{Binding IsDevelopmentMode}" FontSize="10.667"/>
+                                </StackPanel>
+                                <StackPanel Orientation="Horizontal" Grid.Row="1" Grid.Column="1">
+                                    <TextBlock Text="IsResourcePackage: " Foreground="#FF9B9B9B" FontSize="10.667"/>
+                                    <TextBlock Text="{Binding IsResourcePackage}" FontSize="10.667"/>
+                                </StackPanel>
+                                <StackPanel Orientation="Horizontal" Grid.Row="2" Grid.ColumnSpan="2">
+                                    <TextBlock Text="DisplayName: " Foreground="#FF9B9B9B" FontSize="10.667"/>
+                                    <TextBlock Text="{Binding DisplayName}" FontSize="10.667"/>
+                                </StackPanel>
+                                <StackPanel Orientation="Horizontal" Grid.Row="3" Grid.ColumnSpan="2">
+                                    <TextBlock Text="Architecture: " Foreground="#FF9B9B9B" FontSize="10.667"/>
+                                    <TextBlock Text="{Binding Id.Architecture}" FontSize="10.667"/>
+                                </StackPanel>
+                                <StackPanel Orientation="Horizontal" Grid.Row="4" Grid.Column="0">
+                                    <TextBlock Text="Publisher: " Foreground="#FF9B9B9B" FontSize="10.667"/>
+                                    <TextBlock Text="{Binding Id.Publisher}" FontSize="10.667"/>
+                                </StackPanel>
+                                <StackPanel Orientation="Horizontal" Grid.Row="4" Grid.Column="1">
+                                    <TextBlock Text="PublisherId: " Foreground="#FF9B9B9B" FontSize="10.667"/>
+                                    <TextBlock Text="{Binding Id.PublisherId}" FontSize="10.667"/>
+                                </StackPanel>
+                            </Grid>
+                        </Grid>
+                    </Grid>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>
+
+    </Grid>
+</Window>
