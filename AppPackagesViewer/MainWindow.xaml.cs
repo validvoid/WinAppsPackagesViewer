@@ -67,7 +67,7 @@ namespace ProjMarduk.AppPackagesViewer
             if (String.IsNullOrEmpty(txtFilter.Text))
                 return true;
             else
-                return ((item as Package).Id.FullName.IndexOf(txtFilter.Text, StringComparison.OrdinalIgnoreCase) >= 0);
+                return ((item as Package)?.Id.FullName.IndexOf(txtFilter.Text, StringComparison.OrdinalIgnoreCase) >= 0);
         }
 
         private bool PublisherFilter(object item)
@@ -75,7 +75,7 @@ namespace ProjMarduk.AppPackagesViewer
             if (String.IsNullOrEmpty(txtFilter.Text))
                 return true;
             else
-                return ((item as Package).Id.Publisher.IndexOf(txtFilter.Text, StringComparison.OrdinalIgnoreCase) >= 0);
+                return ((item as Package)?.Id.Publisher.IndexOf(txtFilter.Text, StringComparison.OrdinalIgnoreCase) >= 0);
         }
 
         private void txtFilter_TextChanged(object sender, System.Windows.Controls.TextChangedEventArgs e)
@@ -98,13 +98,11 @@ namespace ProjMarduk.AppPackagesViewer
 
         private void menuItemOpenInstallDir_OnClick(object sender, RoutedEventArgs e)
         {
-            if (listView.SelectedIndex != -1)
+            var item = listView.SelectedItem as Package;
+            if (item != null)
             {
                 try
                 {
-                    var item = packages[listView.SelectedIndex];
-
-
                     if (!string.IsNullOrEmpty(item.InstalledLocation?.Path))
                     {
                         Process process = new Process
@@ -131,11 +129,11 @@ namespace ProjMarduk.AppPackagesViewer
 
         private void menuItemOpenLocalDir_OnClick(object sender, RoutedEventArgs e)
         {
-            if (listView.SelectedIndex != -1)
+            var item = listView.SelectedItem as Package;
+            if (item != null)
             {
                 try
                 {
-                    var item = packages[listView.SelectedIndex];
                     var fullpath = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData) +
                                    @"\Packages\" + item.Id.FamilyName;
 
@@ -166,12 +164,11 @@ namespace ProjMarduk.AppPackagesViewer
 
         private void menuItemStatus_OnClick(object sender, RoutedEventArgs e)
         {
-            if (listView.SelectedIndex != -1)
+            var item = listView.SelectedItem as Package;
+            if (item != null)
             {
                 try
                 {
-                    var item = packages[listView.SelectedIndex];
-
                     MessageBox.Show(
                         $"DataOffline: {item.Status.DataOffline}\nDependencyIssue: {item.Status.DependencyIssue}\nDeploymentInProgress: {item.Status.DeploymentInProgress}\nDisabled: {item.Status.Disabled}\nLicenseIssue: {item.Status.LicenseIssue}\nModified: {item.Status.Modified}\nNeedsRemediation: {item.Status.NeedsRemediation}\nNotAvailable: {item.Status.NotAvailable}\nPackageOffline: {item.Status.PackageOffline}\nServicing: {item.Status.Servicing}\nTampered: {item.Status.Tampered}");
                 }
